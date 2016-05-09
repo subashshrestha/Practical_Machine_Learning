@@ -1,0 +1,84 @@
+
+# Coursera Practical Machine Learning Assignment: Writeup
+## Assignment
+
+Given 2 files, we are asked to develop a machine learning paradigm to predict the type of exercise performed based an a variety of measurements. The first file is the training file, used to develop our algorithm, and the second is used to make our final predictions.
+
+The training data is: https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv
+The testing data is: https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv
+
+we first download the both set of data i.e our csv files into the current working directory and perform basic exploratory data analysis. But we first remove all the row in data with NA values.
+
+```{r}
+a=read.csv('pml-training.csv',na.strings=c('','NA'))
+b=a[,!apply(a,2,function(x) any(is.na(x)) )]
+c=b[,-c(1:7)]
+dim(c)
+```
+After applying the NA removal, we now have 19622 observatiobs and 53 predictions
+
+we now down the necessary packages, install them and use them for further analysis.
+
+```{r eval= FALSE}
+install.packages('randomForest')
+install.packages('caret')
+install.packages('e1071')
+```
+
+```{r}
+library('randomForest')
+library('caret')
+library('e1071')
+```
+
+For cross validation, We split our testing data into sub groups, 60:40
+```{r}
+subGrps=createDataPartition(y=c$classe, p=0.6, list=FALSE)
+subTraining=c[subGrps,]
+subTesting=c[-subGrps, ]
+dim(subTraining);dim(subTesting)
+```
+We see there are 11776  in the subTraining group, and 7846 in the subTesting group.
+
+we now make a predictive model based on the forest paradigm.
+
+```{r}
+model=randomForest(classe~., data=subTraining, method='class')
+pred=predict(model,subTesting, type='class')
+z=confusionMatrix(pred,subTesting$classe)
+save(z,file='test.RData')
+```
+
+we now load the test.RData file
+```{r}
+load('test.RData')
+z$table
+z$overall[1]
+```
+
+Based on this, The accuracy is 99.49%. The out of sample error, that is the error rate on a new (subTesting) data set, here is going to be 0.51%, with a 95% confidence interval of 0.52% to .9%.
+
+## Final Data Set Analysis and Predictions
+
+we now continue with the final testing data set, and proceed as before.
+```{r}
+d=read.csv('pml-testing.csv',na.strings=c('','NA'))
+e=d[,!apply(d,2,function(x) any(is.na(x)) )]
+f=e[,-c(1:7)]
+dim(f)
+```
+
+after the data processed, we analize it using previous model developed
+```{r}
+predicted=predict(model,f,type='class')
+save(predicted,file='predicted.RData')
+```
+
+The final prediction for the 20 ends up as:
+```{r}
+load('predicted.RData')
+predicted
+```
+
+The Prediction is as: 
+## B  A  B  A  A  E  D  B  A  A  B  C  B  A  E  E  A  B  B  B 
