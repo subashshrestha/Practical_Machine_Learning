@@ -129,11 +129,9 @@ dim(c)</code></pre>
 install.packages('caret')
 install.packages('e1071')</code></pre>
 <pre class="r"><code>library('randomForest')</code></pre>
-<pre><code>## Warning: package 'randomForest' was built under R version 3.2.5</code></pre>
 <pre><code>## randomForest 4.6-12</code></pre>
 <pre><code>## Type rfNews() to see new features/changes/bug fixes.</code></pre>
 <pre class="r"><code>library('caret')</code></pre>
-<pre><code>## Warning: package 'caret' was built under R version 3.2.5</code></pre>
 <pre><code>## Loading required package: lattice</code></pre>
 <pre><code>## Loading required package: ggplot2</code></pre>
 <pre><code>## 
@@ -142,7 +140,6 @@ install.packages('e1071')</code></pre>
 ## 
 ##     margin</code></pre>
 <pre class="r"><code>library('e1071')</code></pre>
-<pre><code>## Warning: package 'e1071' was built under R version 3.2.5</code></pre>
 <p>For cross validation, We split our testing data into sub groups, 60:40</p>
 <pre class="r"><code>subGrps=createDataPartition(y=c$classe, p=0.6, list=FALSE)
 subTraining=c[subGrps,]
@@ -161,14 +158,14 @@ save(z,file='test.RData')</code></pre>
 z$table</code></pre>
 <pre><code>##           Reference
 ## Prediction    A    B    C    D    E
-##          A 2227   11    0    0    0
-##          B    4 1500   15    0    0
-##          C    0    7 1353   12    1
-##          D    0    0    0 1273    4
-##          E    1    0    0    1 1437</code></pre>
+##          A 2230    8    0    0    0
+##          B    1 1500    5    0    0
+##          C    0   10 1360   10    3
+##          D    0    0    3 1274    0
+##          E    1    0    0    2 1439</code></pre>
 <pre class="r"><code>z$overall[1]</code></pre>
 <pre><code>##  Accuracy 
-## 0.9928626</code></pre>
+## 0.9945195</code></pre>
 <p>Based on this, The accuracy is 99.49%. The out of sample error, that is the error rate on a new (subTesting) data set, here is going to be 0.51%, with a 95% confidence interval of 0.52% to .9%.</p>
 </div>
 <div id="final-data-set-analysis-and-predictions" class="section level2">
